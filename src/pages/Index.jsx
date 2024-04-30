@@ -10,7 +10,7 @@ const NoteCard = ({ note, onDelete, onEdit }) => (
     <Button leftIcon={<FaTrash />} colorScheme="red" size="sm" onClick={() => onDelete(note.id)} mt={2}>
       Delete
     </Button>
-    <Button leftIcon={<FaEdit />} colorScheme="teal" size="sm" onClick={() => onEdit(note.id, { ...note, title: 'New Title', content: 'New Content' })} mt={2} ml={2}>
+    <Button leftIcon={<FaEdit />} colorScheme="teal" size="sm" onClick={() => onEdit(note.id, { ...note, title: note.title, content: note.content })} mt={2} ml={2}>
       Edit
     </Button>
   </Box>
@@ -60,7 +60,7 @@ const Index = () => {
   const handleEditNote = async (noteId, updatedNote) => {
     const success = await client.set(noteId, updatedNote);
     if (success) {
-      setNotes(notes.map(note => (note.id === noteId ? updatedNote : note)));
+      setNotes(notes.map(note => (note.id === noteId ? { ...note, ...updatedNote } : note)));
       toast({
         title: "Note updated.",
         status: "info",
