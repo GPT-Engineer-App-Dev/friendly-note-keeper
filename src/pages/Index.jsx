@@ -5,12 +5,12 @@ import { client } from "../../lib/crud";
 
 const NoteCard = ({ note, onDelete, onEdit }) => (
   <Box p={4} borderWidth="1px" borderRadius="lg">
-    <Input value={note.title} isReadOnly />
-    <Textarea value={note.content} isReadOnly mt={2} />
+    <Input value={note.title} />
+    <Textarea value={note.content} mt={2} />
     <Button leftIcon={<FaTrash />} colorScheme="red" size="sm" onClick={() => onDelete(note.id)} mt={2}>
       Delete
     </Button>
-    <Button leftIcon={<FaEdit />} colorScheme="teal" size="sm" onClick={() => onEdit(note)} mt={2} ml={2}>
+    <Button leftIcon={<FaEdit />} colorScheme="teal" size="sm" onClick={() => onEdit(note.id, { ...note, title: 'New Title', content: 'New Content' })} mt={2} ml={2}>
       Edit
     </Button>
   </Box>
@@ -57,10 +57,10 @@ const Index = () => {
     }
   };
 
-  const handleEditNote = async (editedNote) => {
-    const success = await client.set(editedNote.id, editedNote);
+  const handleEditNote = async (noteId, updatedNote) => {
+    const success = await client.set(noteId, updatedNote);
     if (success) {
-      setNotes(notes.map(note => (note.id === editedNote.id ? editedNote : note)));
+      setNotes(notes.map(note => (note.id === noteId ? updatedNote : note)));
       toast({
         title: "Note updated.",
         status: "info",
